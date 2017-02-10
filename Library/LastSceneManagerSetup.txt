@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/fails.unity
+- path: Assets/collisionSim.unity
   isLoaded: 1
   isActive: 1
