@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="Assets\floor.cs" />
     <Compile Include="Assets\floorWaterSpawn.cs" />
+    <Compile Include="Assets\shootBalls.cs" />
     <Compile Include="Assets\spawnBalls.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
