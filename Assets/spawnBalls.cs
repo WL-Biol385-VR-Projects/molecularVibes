@@ -27,9 +27,33 @@ public class spawnBalls : MonoBehaviour {
 
     private void SpawnColliders()
     {
-        // gameObject is the GameObject that the script is attached to
-        var top = gameObject.AddComponent<BoxCollider>();
-        top.center = new Vector3(1, 2, xmin);
+
+        Vector3[] center = new Vector3[6] {
+            new Vector3(xmin, 0, 0),
+            new Vector3(xmin, 0, 0),
+            new Vector3(0, ymin, 0),
+            new Vector3(0, ymax, 0),
+            new Vector3(0, 0, zmin),
+            new Vector3(0, 0, zmax)
+        };
+
+        Vector3[] size = new Vector3[6] {
+            new Vector3(0, 1, 1),
+            new Vector3(0, 1, 1),
+            new Vector3(1, 0, 1),
+            new Vector3(1, 0, 1),
+            new Vector3(1, 1, 0),
+            new Vector3(1, 1, 0)
+        };
+
+        for (int i = 0; i < 6; i++)
+        {
+            // gameObject is the GameObject that the script is attached to
+            var side = gameObject.AddComponent<BoxCollider>();
+            side.center = center[i];
+            side.size = size[i];
+        }
+
     }
 
 	// Run at scene initialization
@@ -43,6 +67,8 @@ public class spawnBalls : MonoBehaviour {
         ymax = transform.localPosition.y + (transform.localScale.y / 2);
         zmin = transform.localPosition.z - (transform.localScale.z / 2);
         zmax = transform.localPosition.z + (transform.localScale.z / 2);
+
+        SpawnColliders();
 
         // simple for..loop with an integer counter; one per ball
         for (var i = 0; i < ballCount; i++)

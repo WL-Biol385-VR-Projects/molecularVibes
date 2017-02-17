@@ -1,4 +1,4 @@
 sceneSetups:
-- path: Assets/collisionSim.unity
+- path: Assets/shootingballs.unity
   isLoaded: 1
   isActive: 1
