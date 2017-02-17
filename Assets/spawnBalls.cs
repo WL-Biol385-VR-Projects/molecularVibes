@@ -1,27 +1,50 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 // scipt components implement a single class that derives from `MonoBehavior`
 public class spawnBalls : MonoBehaviour {
 
     // `public` variables are exposed as configurable attributes on script components
-    public Transform ballPrefab;
-    public int       ballCount;
+    public Transform ballPrefab;             // Transforms control the position and size of every GameObject
+    public int       ballCount;              // This implementation hard codes number of balls using editor
     public float     maxVelocity;
-    public Vector3   areaCenter, areaScale;
+    public Vector3   areaCenter, areaScale;  // A vector in 3D space
+
+    //`private` variables are only accessible in methods on this object
+    private List<Transform> balls;           // A List of Transform objects; lists are more efficient than arrays when you're frequently resizing.
+    private float xmin,                      // Size of spawn and collision box, based on the transform on gameObject this script is attached to
+                  xmax,
+                  ymin,
+                  ymax,
+                  zmin,
+                  zmax;
+
+    private void SpawnBalls()
+    {
+
+    }
+
+    private void SpawnColliders()
+    {
+        // gameObject is the GameObject that the script is attached to
+        var top = gameObject.AddComponent<BoxCollider>();
+        top.center = new Vector3(1, 2, xmin);
+    }
 
 	// Run at scene initialization
-	void Start () {
+	void Start ()
+    {
 
-        // there is probably a more elegant idomatic c# way of doing this
-        float xmin = areaCenter.x - (areaScale.x / 2);
-        float xmax = areaCenter.x + (areaScale.x / 2);
-        float ymin = areaCenter.y - (areaScale.y / 2);
-        float ymax = areaCenter.y + (areaScale.y / 2);
-        float zmin = areaCenter.z - (areaScale.z / 2);
-        float zmax = areaCenter.z + (areaScale.z / 2);
+        // there is probably a more elegant c# way of doing this
+        xmin = transform.localPosition.x - (transform.localScale.x / 2);
+        xmax = transform.localPosition.x + (transform.localScale.x / 2);
+        ymin = transform.localPosition.y - (transform.localScale.y / 2);
+        ymax = transform.localPosition.y + (transform.localScale.y / 2);
+        zmin = transform.localPosition.z - (transform.localScale.z / 2);
+        zmax = transform.localPosition.z + (transform.localScale.z / 2);
 
-        // simple for..loop with an integer counter; one per new ball
+        // simple for..loop with an integer counter; one per ball
         for (var i = 0; i < ballCount; i++)
         {
             // `Random.Range` returns a random number within the range given.  We'll
@@ -48,7 +71,8 @@ public class spawnBalls : MonoBehaviour {
 	}
 	
 	// Update is called once per frame; don't do any heavy lifting here
-	void Update () {
+	void Update ()
+    {
 	
 	}
 
