@@ -9,20 +9,43 @@ public class spawnBalls : MonoBehaviour {
     public Transform ballPrefab;             // Transforms control the position and size of every GameObject
     public int       ballCount;              // This implementation hard codes number of balls using editor
     public float     maxVelocity;
-    public Vector3   areaCenter, areaScale;  // A vector in 3D space
 
     //`private` variables are only accessible in methods on this object
     private List<Transform> balls;           // A List of Transform objects; lists are more efficient than arrays when you're frequently resizing.
-    private float xmin,                      // Size of spawn and collision box, based on the transform on gameObject this script is attached to
-                  xmax,
-                  ymin,
-                  ymax,
-                  zmin,
-                  zmax;
+    private float xmin = -0.5f,              // Size of spawn and collision box, based on the transform on gameObject this script is attached to; all relative to parental transform
+                  xmax =  0.5f,
+                  ymin = -0.5f,
+                  ymax =  0.5f,
+                  zmin = -0.5f,
+                  zmax =  0.5f;
 
     private void SpawnBalls()
     {
+        // simple for..loop with an integer counter; one per ball
+        for (var i = 0; i < ballCount; i++)
+        {
+            // `Random.Range` returns a random number within the range given.  We'll
+            // randomize the starting x,z position of the balls
+            float x = Random.Range(xmin, xmax);
+            float y = Random.Range(ymin, ymax);
+            float z = Random.Range(zmin, zmax);
 
+            // the `(Transform)` syntax on this line is a type-cast; it's a way of telling 
+            // the compiler you know the actual return subclass from a call.
+            Transform obj = (Transform)Instantiate(ballPrefab, new Vector3(x, y, z), Quaternion.identity, gameObject.tra);
+
+            // Here we generate a random velocity vector to apply to each ball
+            float min = -1 * maxVelocity;
+            float max = maxVelocity;
+            Vector3 v = new Vector3(Random.Range(min, max), Random.Range(min, max), Random.Range(min, max));
+
+            // the `<Rigidbody>` syntax here is a type parameter being used with a
+            // generic function `GetComponent`.  In this case it causes the generic function
+            // to return a `Rigidbody` component if one is attached; null if not.
+            obj.GetComponent<Rigidbody>().AddForce(v, ForceMode.VelocityChange);
+
+            
+        }
     }
 
     private void SpawnColliders()
@@ -30,7 +53,7 @@ public class spawnBalls : MonoBehaviour {
 
         Vector3[] center = new Vector3[6] {
             new Vector3(xmin, 0, 0),
-            new Vector3(xmin, 0, 0),
+            new Vector3(xmax, 0, 0),
             new Vector3(0, ymin, 0),
             new Vector3(0, ymax, 0),
             new Vector3(0, 0, zmin),
@@ -38,12 +61,12 @@ public class spawnBalls : MonoBehaviour {
         };
 
         Vector3[] size = new Vector3[6] {
-            new Vector3(0, 1, 1),
-            new Vector3(0, 1, 1),
-            new Vector3(1, 0, 1),
-            new Vector3(1, 0, 1),
-            new Vector3(1, 1, 0),
-            new Vector3(1, 1, 0)
+            new Vector3(0.1f, 1, 1),
+            new Vector3(0.1f, 1, 1),
+            new Vector3(1, 0.1f, 1),
+            new Vector3(1, 0.1f, 1),
+            new Vector3(1, 1, 0.1f),
+            new Vector3(1, 1, 0.1f)
         };
 
         for (int i = 0; i < 6; i++)
@@ -60,39 +83,8 @@ public class spawnBalls : MonoBehaviour {
 	void Start ()
     {
 
-        // there is probably a more elegant c# way of doing this
-        xmin = transform.localPosition.x - (transform.localScale.x / 2);
-        xmax = transform.localPosition.x + (transform.localScale.x / 2);
-        ymin = transform.localPosition.y - (transform.localScale.y / 2);
-        ymax = transform.localPosition.y + (transform.localScale.y / 2);
-        zmin = transform.localPosition.z - (transform.localScale.z / 2);
-        zmax = transform.localPosition.z + (transform.localScale.z / 2);
-
         SpawnColliders();
-
-        // simple for..loop with an integer counter; one per ball
-        for (var i = 0; i < ballCount; i++)
-        {
-            // `Random.Range` returns a random number within the range given.  We'll
-            // randomize the starting x,z position of the balls
-            float x = Random.Range(xmin, xmax);
-            float y = Random.Range(ymin, ymax);
-            float z = Random.Range(zmin, zmax);
-
-            // the `(Transform)` syntax on this line is a type-cast; it's a way of telling 
-            // the compiler you know the actual return subclass from a call.
-            Transform obj = (Transform) Instantiate(ballPrefab, new Vector3(x, y, z), Quaternion.identity);
-
-            // Here we generate a random velocity vector to apply to each ball
-            float min = -1 * maxVelocity;
-            float max = maxVelocity;
-            Vector3 v = new Vector3(Random.Range(min, max), Random.Range(min, max), Random.Range(min, max));
-
-            // the `<Rigidbody>` syntax here is a type parameter being used with a
-            // generic function `GetComponent`.  In this case it causes the generic function
-            // to return a `Rigidbody` component if one is attached; null if not.
-            obj.GetComponent<Rigidbody>().AddForce(v, ForceMode.VelocityChange);
-        }
+        SpawnBalls();
 
 	}
 	
