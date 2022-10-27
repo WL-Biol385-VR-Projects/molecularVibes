@@ -32,7 +32,7 @@ public class spawnBalls : MonoBehaviour {
 
             // the `(Transform)` syntax on this line is a type-cast; it's a way of telling 
             // the compiler you know the actual return subclass from a call.
-            Transform obj = (Transform)Instantiate(ballPrefab, new Vector3(x, y, z), Quaternion.identity, gameObject.tra);
+            Transform obj = (Transform)Instantiate(ballPrefab, new Vector3(x, y, z), Quaternion.identity);
 
             // Here we generate a random velocity vector to apply to each ball
             float min = -1 * maxVelocity;
